@@ -4,22 +4,6 @@ import pandas as pd
 
 
 class SequenceBuilder:
-    """
-    Build sliding-window sequences for the ToN-IoT network dataset.
-
-    Each sequence contains:
-        window_size records
-        num_features features
-
-    Example:
-        window_size = 5
-        stride = 1
-
-        [0,1,2,3,4] -> label of record 4
-        [1,2,3,4,5] -> label of record 5
-        [2,3,4,5,6] -> label of record 6
-    """
-
     def __init__(
         self,
         window_size: int = 5,
@@ -39,24 +23,7 @@ class SequenceBuilder:
         df: pd.DataFrame,
         feature_row_ids: np.ndarray,
     ):
-        """
-        Build sequence indices.
-
-        Parameters
-        ----------
-        df:
-            Original dataframe containing ts, src_ip, dst_ip and target.
-        feature_row_ids:
-            Mapping from dataframe row -> row index in features.npy.
-
-        Returns
-        -------
-        sequence_indices:
-            Shape: (num_sequences, window_size)
-        labels:
-            Shape: (num_sequences,)
-        """
-
+     
         required_columns = (
             self.group_columns
             + [self.time_column, self.target_column]

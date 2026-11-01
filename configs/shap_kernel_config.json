@@ -1,0 +1,35 @@
+{
+  "project_root": ".",
+  "model": "lstm",
+  "attack": "pgd",
+  "epsilon": 0.05,
+  "alpha": 0.01,
+  "steps": 10,
+  "window_size": 5,
+  "num_features": 42,
+  "num_classes": 10,
+  "hidden_size": 64,
+  "num_layers": 1,
+  "dropout": 0.3,
+  "device": "cpu",
+  "seed": 42,
+  "background_size": 50,
+  "explanation_size": 200,
+  "nsamples": 2468,
+  "top_k_values": [
+    5,
+    10
+  ],
+  "checkpoints": {
+    "lstm": "models/checkpoints/lstm/lstm_baseline_a2/0.0003/best.pt",
+    "gru": "models/checkpoints/gru/gru_baseline_a2/0.0003/best.pt"
+  },
+  "preprocessing": {
+    "features_file": "data/processed/features.npy",
+    "sequence_indices_file": "data/processed/sequence_indices.npy",
+    "train_indices_file": "data/processed/train_indices.npy",
+    "test_indices_file": "data/processed/test_indices.npy",
+    "metadata_file": "data/processed/artifacts/preprocessing_metadata.json"
+  },
+  "output_dir": "logs/xai/shap/{model}_baseline_a2/{attack}_epsilon_{epsilon}/kernel"
+}

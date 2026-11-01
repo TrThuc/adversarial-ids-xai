@@ -1,0 +1,1 @@
+python -m pip install numpy pandas scipy scikit-learn matplotlib seaborn tensorflow shap adversarial-robustness-toolbox torch torchvision torchaudio

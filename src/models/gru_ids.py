@@ -3,23 +3,6 @@ import torch.nn as nn
 
 
 class GRUIDS(nn.Module):
-    """
-    GRU baseline for ToN-IoT network intrusion classification.
-
-    Input:
-        [batch_size, sequence_length, input_size]
-
-    Example:
-        [64, 5, 42]
-
-    Output:
-        [batch_size, num_classes]
-
-    The model returns raw logits.
-    Softmax is intentionally NOT applied here because
-    CrossEntropyLoss expects raw logits.
-    """
-
     def __init__(
         self,
         input_size=42,

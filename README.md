@@ -69,7 +69,7 @@ Khuyến nghị sử dụng Python 3.11 hoặc môi trường tương thích v�
 
 ```powershell
 python -m venv .venv
-.\\.venv\\Scripts\\Activate.ps1
+.\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 ```
 
@@ -80,8 +80,8 @@ python -m pip install -r requirements.txt
 Tạo một môi trường riêng cho dự án:
 
 ```powershell
-conda create -n adversarial\_ids\_xai python=3.11 -y
-conda activate adversarial\_ids\_xai
+conda create -n adversarial_ids_xai python=3.11 -y
+conda activate adversarial_ids_xai
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
@@ -97,77 +97,77 @@ where python
 Mỗi lần làm việc với dự án, kích hoạt lại môi trường:
 
 ```powershell
-conda activate adversarial\_ids\_xai
+conda activate adversarial_ids_xai
 ```
 
 ## Quy trình chạy
 
-### 1\. Chuẩn bị dữ liệu
+### 1. Chuẩn bị dữ liệu
 
 ```powershell
-python scripts/data/01\_prepare\_a2\_train\_only.py
-python scripts/data/04\_test\_dataloader.py
-python scripts/data/05\_audit\_sequences.py
+python scripts/data/01_prepare_a2_train_only.py
+python scripts/data/04_test_dataloader.py
+python scripts/data/05_audit_sequences.py
 ```
 
-`scripts/data/06\_prepare\_v2\_temporal\_split.py` là pipeline tách theo thời gian. Pipeline này chia train/validation/test trước khi tạo cửa sổ và fit preprocessing trên train, phù hợp hơn khi cần kiểm soát rò rỉ giữa các tập.
+`scripts/data/06_prepare_v2_temporal_split.py` là pipeline tách theo thời gian. Pipeline này chia train/validation/test trước khi tạo cửa sổ và fit preprocessing trên train, phù hợp hơn khi cần kiểm soát rò rỉ giữa các tập.
 
-### 2\. Huấn luyện mô hình IDS
+### 2. Huấn luyện mô hình IDS
 
 ```powershell
-python scripts/training/01\_train\_lstm.py
-python scripts/training/02\_train\_gru.py
+python scripts/training/01_train_lstm.py
+python scripts/training/02_train_gru.py
 ```
 
-### 3\. Đánh giá mô hình sạch
+### 3. Đánh giá mô hình sạch
 
 ```powershell
-python scripts/evaluation/01\_evaluate\_lstm.py
-python scripts/evaluation/02\_evaluate\_gru.py
+python scripts/evaluation/01_evaluate_lstm.py
+python scripts/evaluation/02_evaluate_gru.py
 ```
 
-### 4\. Sinh mẫu adversarial
+### 4. Sinh mẫu adversarial
 
 ```powershell
-python scripts/attack/01\_fgsm\_lstm.py
-python scripts/attack/01\_fgsm\_gru.py
-python scripts/attack/02\_pgd\_lstm.py
-python scripts/attack/02\_pgd\_gru.py
+python scripts/attack/01_fgsm_lstm.py
+python scripts/attack/01_fgsm_gru.py
+python scripts/attack/02_pgd_lstm.py
+python scripts/attack/02_pgd_gru.py
 ```
 
 Nên đánh giá các mức `epsilon = 0.01, 0.05, 0.10, 0.20`. Với PGD cần ghi rõ `epsilon`, `alpha` và số bước `steps` trong kết quả.
 
-### 5\. Tính SHAP
+### 5. Tính SHAP
 
 ```powershell
-python scripts/xai/04\_shap\_kernel\_all.py --help
-python scripts/xai/05\_shap\_gradient\_all.py --help
+python scripts/xai/04_shap_kernel_all.py --help
+python scripts/xai/05_shap_gradient_all.py --help
 ```
 
 SHAP được tính cho mẫu clean và adversarial, sau đó dùng làm đầu vào cho detector.
 
-### 6\. Xây dựng detector features
+### 6. Xây dựng detector features
 
 ```powershell
-python scripts/evaluation/06\_build\_detector\_features.py --help
+python scripts/evaluation/06_build_detector_features.py --help
 ```
 
 Ở `pair mode`, mỗi mẫu là một cặp clean–adversarial với các đặc trưng:
 
 ```text
-drift\_mean, shift\_std, shift\_max, shift\_l2,
-top5\_overlap, top10\_overlap, large\_shift\_fraction
+drift_mean, shift_std, shift_max, shift_l2,
+top5_overlap, top10_overlap, large_shift_fraction
 ```
 
 Ở `state mode`, mỗi vector SHAP là một mẫu độc lập. Đầu vào gồm SHAP attribution đã chuẩn hóa và các đặc trưng tổng hợp như entropy, top-k mass và max mass; nhãn là `0 = clean`, `1 = adversarial`.
 
 `pair` phù hợp để phân tích thay đổi SHAP giữa hai trạng thái. `state` phù hợp hơn cho detector online khi không có mẫu clean tương ứng.
 
-### 7\. Detector luật và detector học máy
+### 7. Detector luật và detector học máy
 
 ```powershell
-python scripts/evaluation/07\_rule\_based\_detector.py --help
-python scripts/evaluation/08\_train\_learned\_detector.py `
+python scripts/evaluation/07_rule_based_detector.py --help
+python scripts/evaluation/08_train_learned_detector.py `
   --detector-dir <detector-directory> `
   --mode pair `
   --classifier logistic
@@ -177,15 +177,15 @@ Classifier có thể là:
 
 ```text
 logistic
-random\_forest
+random_forest
 ```
 
-Với `--mode pair`, thư mục cần có `pair\_X.npy`, nhãn pair và các file split tương ứng. Với `--mode state`, cần có `state\_X.npy`, `state\_y.npy` và các file split state.
+Với `--mode pair`, thư mục cần có `pair_X.npy`, nhãn pair và các file split tương ứng. Với `--mode state`, cần có `state_X.npy`, `state_y.npy` và các file split state.
 
-### 8\. Entropy và Gini SHAP
+### 8. Entropy và Gini SHAP
 
 ```powershell
-python scripts/evaluation/09\_compute\_shap\_entropy\_gini.py `
+python scripts/evaluation/09_compute_shap_entropy_gini.py `
   --run-dir <shap-run-directory>
 ```
 
@@ -194,7 +194,7 @@ Script tính entropy/Gini của vector SHAP clean và adversarial, cùng các gi
 Tạo các bộ đặc trưng ablation:
 
 ```powershell
-python scripts/evaluation/10\_build\_entropy\_gini\_ablation.py `
+python scripts/evaluation/10_build_entropy_gini_ablation.py `
   --detector-dir <detector-directory> `
   --entropy-gini-dir <entropy-gini-directory>
 ```
@@ -203,21 +203,21 @@ Các biến thể gồm:
 
 ```text
 baseline
-entropy\_only
-gini\_only
-entropy\_gini\_only
-baseline\_plus\_entropy
-baseline\_plus\_gini
+entropy_only
+gini_only
+entropy_gini_only
+baseline_plus_entropy
+baseline_plus_gini
 extended
 ```
 
 `baseline` giữ 7 đặc trưng ban đầu. `extended` gồm 7 đặc trưng baseline và 4 đặc trưng entropy/Gini:
 
 ```text
-entropy\_delta
-entropy\_abs\_delta
-gini\_delta
-gini\_abs\_delta
+entropy_delta
+entropy_abs_delta
+gini_delta
+gini_abs_delta
 ```
 
 ## Metrics
@@ -236,10 +236,10 @@ Các kết quả được lưu trong `metrics.json`. Các kết quả:
 Khi so sánh entropy/Gini, cần giữ nguyên attack, epsilon, mô hình IDS, SHAP run, train/validation/test split, classifier và random seed. So sánh chính:
 
 ```text
-baseline vs entropy\_only
-baseline vs gini\_only
-baseline vs baseline\_plus\_entropy
-baseline vs baseline\_plus\_gini
+baseline vs entropy_only
+baseline vs gini_only
+baseline vs baseline_plus_entropy
+baseline vs baseline_plus_gini
 baseline vs extended
 ```
 
